@@ -3,6 +3,15 @@
           package="com.yongoe.ecyx">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 对应鸿蒙侧 common/module.json5 的 ohos.permission.LOCATION /
+         ohos.permission.APPROXIMATELY_LOCATION。
+         hvigor 跨平台编译不映射权限，安卓侧权限须在此手动声明；
+         遗漏会导致 LocationManager.checkAndRequest 在安卓上申请失败 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- geolocation 插件 requestAndCheckLocationPermission 逐项 checkSelfPermission：
+         FINE + COARSE + WIFI_STATE 三者全过才放行 isLocationEnabled 等接口，缺一即报 201 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <application
             android:name=".MyApplication"
             android:allowBackup="true"
