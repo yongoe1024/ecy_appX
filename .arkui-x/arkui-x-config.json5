@@ -1,10 +1,17 @@
 {
   "crossplatform": true,
   "modules": [
-    "entry"
+    "entry",
+    "common",
+    "home"
   ],
   "platforms": [
     "android",
     "ios"
-  ]
+  ],
+  "buildOption": {
+    // 临时开关
+    // 注意：开关按模块生效，modules 必须列出全部参与编译的模块，缺列的模块仍会报 ERROR
+    "ignoreCrossPlatform": true
+  }
 }
