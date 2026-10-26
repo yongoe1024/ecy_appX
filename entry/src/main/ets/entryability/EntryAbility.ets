@@ -109,12 +109,12 @@ export default class EntryAbility extends UIAbility {
           hilog.error(DOMAIN, TAG, 'Failed to 设置窗口全屏');
         })
       // 状态栏统一黑色图标文字：背景透明透出页面浅色底（安卓默认白字，鸿蒙默认黑字）。
-      // statusBarContentColor 鸿蒙生效（设置后 isStatusBarLightIcon 失效）；安卓端引擎把
-      // 内容色归一为黑/白后经 SubWindowManager.setStatusBar 置 SYSTEM_UI_FLAG_LIGHT_STATUS_BAR，
-      // isStatusBarLightIcon 为 crossplatform 字段一并传入兜底
+      // 内容色须用 '#66000000'（OpenHarmony SystemBarProperty 标准黑编码）：安卓端引擎原样传值，
+      // Java 侧 SubWindowManager.setStatusBar 仅认 0x66000000(黑)/0xE6FFFFFF(白) 两个魔数，
+      // '#FF000000' 不命中会退回白图标（logcat: contentColor=-16777216）
       windowClass.setWindowSystemBarProperties({
         statusBarColor: '#00000000',
-        statusBarContentColor: '#FF000000',
+        statusBarContentColor: '#66000000',
         isStatusBarLightIcon: false,
       })
         .catch((err: BusinessError) => {
