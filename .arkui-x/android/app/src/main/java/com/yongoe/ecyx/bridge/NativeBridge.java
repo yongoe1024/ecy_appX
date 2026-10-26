@@ -1,4 +1,4 @@
-package com.yongoe.ecy.bridge;
+package com.yongoe.ecyx.bridge;
 
 import android.app.Activity;
 

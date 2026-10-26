@@ -12,14 +12,12 @@ import ohos.stage.ability.adapter.StageApplication;
  * to build android library</a>
  */
 public class MyApplication extends StageApplication {
-    private static final String LOG_TAG = "HiHelloWorld";
-
-    private static final String RES_NAME = "res";
+    private static final String LOG_TAG = "EcyApp";
 
     @Override
     public void onCreate() {
-        Log.e(LOG_TAG, "MyApplication");
+        Log.d(LOG_TAG, "MyApplication onCreate start");
         super.onCreate();
-        Log.e(LOG_TAG, "MyApplication onCreate");
+        Log.d(LOG_TAG, "MyApplication onCreate end");
     }
 }
