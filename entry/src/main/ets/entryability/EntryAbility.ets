@@ -1,5 +1,6 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
+import { BusinessError } from '@kit.BasicServicesKit';
 import { AppStorageV2, window } from '@kit.ArkUI';
 import { EnvEnum, EnvironmentManager, GlobalState, PreferenceManager, RouteManager, } from 'common';
 import { webview } from '@kit.ArkWeb';
@@ -106,6 +107,18 @@ export default class EntryAbility extends UIAbility {
       windowClass.setWindowLayoutFullScreen(true)
         .catch(() => {
           hilog.error(DOMAIN, TAG, 'Failed to 设置窗口全屏');
+        })
+      // 状态栏统一黑色图标文字：背景透明透出页面浅色底（安卓默认白字，鸿蒙默认黑字）。
+      // statusBarContentColor 鸿蒙生效（设置后 isStatusBarLightIcon 失效）；安卓端引擎把
+      // 内容色归一为黑/白后经 SubWindowManager.setStatusBar 置 SYSTEM_UI_FLAG_LIGHT_STATUS_BAR，
+      // isStatusBarLightIcon 为 crossplatform 字段一并传入兜底
+      windowClass.setWindowSystemBarProperties({
+        statusBarColor: '#00000000',
+        statusBarContentColor: '#FF000000',
+        isStatusBarLightIcon: false,
+      })
+        .catch((err: BusinessError) => {
+          hilog.error(DOMAIN, TAG, `Failed to 设置状态栏属性：${err.code} ${err.message}`);
         })
       // 获取避让区域
       const statusBar = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
