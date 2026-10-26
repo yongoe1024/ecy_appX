@@ -4,6 +4,7 @@ import { PermissionManager } from "../../utils";
 import { AppStorageV2 } from "@kit.ArkUI";
 import { GlobalState } from "./..";
 import { AppError } from "../AppError";
+import { NativeSettings, Platform } from 'bridge';
 
 const DOMAIN: number = 0x0000;
 const TAG: string = 'LocationManager';
@@ -73,13 +74,24 @@ export class LocationManager {
   }
 
   /** 请求系统弹窗打开定位开关，返回开关的最终状态 */
-  private openSet(): Promise<boolean> {
-    const context = this.globalState.uiAbilityContext
-    if (!context) {
-      return Promise.reject(new AppError(1007, 'uiAbilityContext 未初始化，无法打开定位开关'))
+  private async openSet(): Promise<boolean> {
+    if (Platform.isHarmony()) {
+      const context = this.globalState.uiAbilityContext
+      if (!context) {
+        return Promise.reject(new AppError(1007, 'uiAbilityContext 未初始化，无法打开定位开关'))
+      }
+      const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
+      // 系统弹窗就地授权，返回值即开关的最终状态：用户未开启时为 false
+      return atManager.requestGlobalSwitch(context, abilityAccessCtrl.SwitchType.LOCATION)
+    } else {
+      // todo 无 ios
+      // 安卓无 SwitchType/requestGlobalSwitch（运行时 undefined），跳系统定位服务设置页，用户返回后复查开关状态
+      try {
+        await NativeSettings.getInstance().openLocationSettingsPage()
+      } catch (e) {
+        return Promise.reject(new AppError(1008, `打开系统定位设置页失败：${e?.message}`))
+      }
+      return geoLocationManager.isLocationEnabled()
     }
-    const atManager: abilityAccessCtrl.AtManager = abilityAccessCtrl.createAtManager();
-    // 系统弹窗就地授权，返回值即开关的最终状态：用户未开启时为 false
-    return atManager.requestGlobalSwitch(context, abilityAccessCtrl.SwitchType.LOCATION)
   }
 }

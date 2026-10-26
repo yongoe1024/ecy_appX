@@ -4,6 +4,7 @@ import { GlobalState } from '../functions';
 import { AppError } from '../functions/AppError';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { BusinessError } from '@kit.BasicServicesKit'
+import { NativeSettings, Platform } from 'bridge';
 
 const DOMAIN: number = 0x0000;
 const TAG: string = 'PermissionManager';
@@ -124,16 +125,29 @@ export class PermissionManager {
         ]
       });
     if (result?.index === 1) {
-      const appInfo =
-        bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION)
-      return state.uiAbilityContext?.startAbility({
-        bundleName: "com.huawei.hmos.settings",
-        abilityName: "com.huawei.hmos.settings.MainAbility",
-        uri: "application_info_entry", // 设置页的应用信息入口
-        parameters: {
-          pushParams: appInfo.name
-        }
-      })
+      // 跳系统设置页：各平台设置入口不同，属真正的平台差异点
+      if (Platform.isHarmony()) {
+        const appInfo =
+          bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION)
+        return state.uiAbilityContext?.startAbility({
+          bundleName: "com.huawei.hmos.settings",
+          abilityName: "com.huawei.hmos.settings.MainAbility",
+          uri: "application_info_entry", // 设置页的应用信息入口
+          parameters: {
+            pushParams: appInfo.name
+          }
+        })
+      }
+      if (Platform.isAndroid()) {
+        // 跳应用详情页（权限入口在其中的「权限」子页），返回后由下次权限检查感知变更；
+        // fire-and-forget：弹窗流程不等用户返回
+        NativeSettings.getInstance().openAppDetailsSettingsPage().catch((e: Error) => {
+          hilog.error(DOMAIN, TAG, `跳转应用详情页失败 ${e?.message}`);
+        })
+        return
+      }
+      // todo iOS 无桥接对端，留空；接入原生侧后按 openSettingsURLString 跳转
+
     }
   }
 }

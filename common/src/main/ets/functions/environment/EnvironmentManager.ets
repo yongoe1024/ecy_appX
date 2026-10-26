@@ -4,6 +4,7 @@ import { AppStorageV2 } from '@kit.ArkUI';
 import { Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { AppError } from '../AppError';
+import { Platform } from 'bridge';
 
 const DOMAIN: number = 0x0000;
 const TAG: string = 'EnvironmentManager';
@@ -21,7 +22,7 @@ const TEST_BASE_URL = 'https://mytest.com' // TODO: 替换为真实测试域名�
  */
 export class EnvironmentManager {
   private static instance: EnvironmentManager
-  private env?: EnvEnum
+  private env: EnvEnum = EnvEnum.DEV
   globalState: GlobalState = AppStorageV2.connect(GlobalState)!
 
   private constructor() {
@@ -83,6 +84,9 @@ export class EnvironmentManager {
    * @throws AppError 1401 applicationContext 缺失或 restartApp 失败时抛出（此时环境已切换，需手动重启）
    */
   private restartApp(): void {
+    if (!Platform.isHarmony()) {
+      throw new AppError(1401, '请手动重启应用以使环境切换生效')
+    }
     const applicationContext = this.globalState.uiAbilityContext?.getApplicationContext();
     if (!applicationContext) {
       throw new AppError(1401, '自动重启失败，请手动重启应用以使环境切换生效')

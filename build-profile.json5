@@ -45,6 +45,10 @@
     {
       "name": "home",
       "srcPath": "./features/home",
+    },
+    {
+      "name": "bridge",
+      "srcPath": "./bridge",
     }
   ]
 }
