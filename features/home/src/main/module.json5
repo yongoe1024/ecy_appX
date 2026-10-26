@@ -3,8 +3,7 @@
     "name": "home",
     "type": "har",
     "deviceTypes": [
-      "default",
-      "tablet"
+      "default"
     ],
     "routerMap": "$profile:router_map"
   }

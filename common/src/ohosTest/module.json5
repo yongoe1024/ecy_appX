@@ -3,8 +3,7 @@
     "name": "common_test",
     "type": "feature",
     "deviceTypes": [
-      "default",
-      "tablet"
+      "default"
     ],
     "deliveryWithInstall": true,
     "installationFree": false

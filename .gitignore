@@ -1,6 +1,6 @@
 /node_modules
 /oh_modules
-/local.properties
+local.properties
 .idea
 **/build
 /.hvigor
@@ -14,3 +14,11 @@
 
 BuildProfile.ets
 .DS_Store
+# ArkUI-X 跨平台编译产物（DevEco Build App 生成，重编译自动重建；路径含中斜杠天然锚定根目录）
+.arkui-x/android/.gradle/
+.arkui-x/android/app/libs/
+.arkui-x/android/app/src/main/assets/
+.arkui-x/ios/arkui-x/
+.arkui-x/ios/frameworks/
+# iOS 工程定义：编译时被 DevEco 注入 xcframework 引用反复改写，跟踪会导致工作区脏/切分支冲突
+.arkui-x/ios/app.xcodeproj/project.pbxproj
