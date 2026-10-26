@@ -7,6 +7,9 @@ DEVECO="/Applications/DevEco-Studio.app"
 
 export DEVECO_SDK_HOME="${DEVECO_SDK_HOME:-$DEVECO/Contents/sdk}"
 export ARKUIX_SDK_HOME="${ARKUIX_SDK_HOME:-$HOME/Library/ArkUI-X/Sdk}"
+# SDK 子目录须与 build-profile 的 targetSdkVersion 同 API（本机 24 与 26.0.0 并存）；
+# 安卓侧 CMakeLists 的引擎头文件路径同为硬编码，改 API 线时两处一起改
+export ARKUIX_API_DIR="${ARKUIX_API_DIR:-26.0.0}"
 export NODE_HOME="${NODE_HOME:-$DEVECO/Contents/tools/node}"
 export OHPM_HOME="${OHPM_HOME:-$DEVECO/Contents/tools/ohpm}"
 export PATH="$NODE_HOME/bin:$PATH"
