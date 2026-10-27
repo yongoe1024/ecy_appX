@@ -12,7 +12,6 @@ local.properties
 **/.test
 /.appanalyzer
 
-BuildProfile.ets
 .DS_Store
 # ArkUI-X 跨平台编译产物（DevEco Build App 生成，重编译自动重建；路径含中斜杠天然锚定根目录）
 .arkui-x/android/.gradle/
